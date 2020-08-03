@@ -1,0 +1,76 @@
+version: '3.3'
+services:
+  Visual:
+    image: jcroldan/docker-vnc:latest
+    environment:
+      USER_PASSWD: '123456'
+      VNC_GEOMETRY: 1920x1080
+      VNC_PASSWD: '123456'
+    ports:
+     - 5911:5911
+     - 9000:9000
+    volumes:
+     - vnc:/home/user
+     - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+     - default
+    logging:
+      driver: json-file
+  joomla:
+    image: joomla:3.9.18-php7.3-apache
+    environment:
+      JOOMLA_DB_HOST: mysql
+      JOOMLA_DB_PASSWORD: test
+    ports:
+      - 8084:80
+    volumes:
+      - joomla:/var/www/html
+    networks:
+      - default
+    logging:
+      driver: json-file
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+    volumes:
+     - mysql_db:/var/lib/mysql
+    networks:
+     - default
+    logging:
+      driver: json-file
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: mysql
+      PMA_PASSWORD: test
+    ports:
+     - 8085:80
+    networks:
+     - default
+    logging:
+      driver: json-file
+  rabbitmq:
+    image: rabbitmq:management
+    hostname: rabbitmq
+    ports:
+     - 5672:5672
+     - 8087:15672
+    volumes:
+     - rabbitmq:/var/lib/rabbitmq
+    networks:
+     - default
+    logging:
+      driver: json-file
+networks:
+  default:
+    driver: overlay
+volumes:
+  joomla:
+    driver: local
+  mysql_db:
+    driver: local
+  rabbitmq:
+    external: true
+  vnc:
+    external: true

@@ -1,0 +1,86 @@
+version: '3.3'
+services:
+  Visual:
+    image: jcroldan/docker-vnc:latest
+    environment:
+      USER_PASSWD: '123456'
+      VNC_GEOMETRY: 1920x1080
+      VNC_PASSWD: '123456'
+    ports:
+     - 5911:5911
+     - 9000:9000
+    volumes:
+     - vnc:/home/user
+     - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+     - default
+    logging:
+      driver: json-file
+  joomla:
+    image: joomla:3.9.18-php7.3-apache
+    environment:
+        JOOMLA_DB_HOST: postgres
+        JOOMLA_DB_PASSWORD: test
+        JOOMLA_DB_USER: root
+    ports:
+      - 8084:80
+    volumes:
+      - joomla:/var/www/html
+      - /makedb.php:/makedb.php
+    networks:
+      - default
+    logging:
+        driver: json-file
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+        PGADMIN_DEFAULT_EMAIL: root
+        PGADMIN_DEFAULT_PASSWORD: test
+    ports:
+      - 8090:80
+    volumes:
+      - pgvolume:/var/lib/pgadmin
+    networks:
+      - default
+    logging:
+        driver: json-file
+  postgres:
+    image: postgres:12.3
+    environment:
+        POSTGRES_DB: joomla
+        POSTGRES_PASSWORD: test
+        POSTGRES_USER: root
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    networks:
+      - default
+    logging:
+        driver: json-file
+  rabbitmq:
+    image: rabbitmq:management
+    hostname: rabbitmq
+    ports:
+     - 5672:5672
+     - 8087:15672
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - default
+    logging:
+        driver: json-file
+networks:
+   default:
+    driver: overlay
+volumes:
+  vnc:
+    external: true
+  rabbitmq:
+    external: true
+  pgvolume:
+    driver: local
+  joomla:
+    driver: local
+  postgres_db:
+    driver: local
