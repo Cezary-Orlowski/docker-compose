@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   Visual:
-    image: jcroldan/docker-vnc:latest
+    image: kstroza/vnc-vc-gstreamer:latest
     environment:
       USER_PASSWD: '123456'
       VNC_GEOMETRY: 1920x1080
@@ -65,7 +65,7 @@ services:
      - 5672:5672
      - 8087:15672
     volumes:
-      - rabbitmq:/var/lib/rabbitmq
+      - rabbitmq:/var/lib/rabbitmq/mnesia/
     networks:
       - default
     logging:
