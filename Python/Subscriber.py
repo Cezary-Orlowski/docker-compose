@@ -1,11 +1,11 @@
-import json, pika, os
+import pika, os
 import mysql.connector
 
 connectMySQL = mysql.connector.connect(user='root', password='test', host='mysql', database='joomla')
 cursor = connectMySQL.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS weather (`id` int(11) DEFAULT NULL, `temp` float(30));")
+cursor.execute("CREATE TABLE IF NOT EXISTS weather (`temp` float(30));")
 
-url = os.environ.get('rabbitmq', 'amqp://guest:guest@localhost/%2f')
+url = os.environ.get('rabbitmq', 'amqp://guest:guest@rabbitmq/%2f')
 params = pika.URLParameters(url)
 params.socket_timeout = 5
 connection = pika.BlockingConnection(params)
