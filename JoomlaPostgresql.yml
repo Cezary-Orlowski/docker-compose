@@ -17,7 +17,7 @@ services:
     logging:
       driver: json-file
   joomla:
-    image: joomla:3.9.18-php7.3-apache
+    image: joomla:3.9.8-php7.3-apache
     environment:
         JOOMLA_DB_HOST: postgres
         JOOMLA_DB_PASSWORD: test
@@ -32,7 +32,7 @@ services:
     logging:
         driver: json-file
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:4.18
     environment:
         PGADMIN_DEFAULT_EMAIL: root
         PGADMIN_DEFAULT_PASSWORD: test
